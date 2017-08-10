@@ -11,6 +11,7 @@ namespace BlackJackConsoleGame
 
             do
             {
+                Console.Clear();
                 Console.WriteLine("-----Welcome to BlackJack game!-----\n");
                 string username;
                 int countOfChips;
@@ -42,7 +43,7 @@ namespace BlackJackConsoleGame
 
                 game.StartGame();
 
-                Console.WriteLine("Do you want to start game again? y/n");
+                Console.WriteLine("\nDo you want to start game again? y/n");
                 do
                 {
                     answer = Console.ReadLine();
@@ -50,7 +51,7 @@ namespace BlackJackConsoleGame
 
             } while (answer != null && answer.Equals("y"));
 
-            Console.WriteLine("Goodbye, my love, goodbye...");
+            Console.WriteLine("\nGoodbye, my love, goodbye...");
             Console.ReadKey();
         } 
     }

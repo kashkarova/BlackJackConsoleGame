@@ -162,8 +162,8 @@ namespace BlackJackConsoleGame.Classes
             {
                 int sarrendoBet;
                 _rules.Sarrendo(Dealer, Player, Bet, out sarrendoBet);
-                Bet = sarrendoBet;
                 Player.CountOfChips += sarrendoBet;
+                Bet = sarrendoBet;
                 ShowCards();
             }
         }
@@ -193,6 +193,7 @@ namespace BlackJackConsoleGame.Classes
             {
                 int doubleBet;
                 _rules.Double(Player, Bet, out doubleBet);
+                Player.CountOfChips -= Bet;
                 Bet = doubleBet;
                 Player.Set.Add(GetRandomCard());
                 HasDouble = true;
@@ -213,6 +214,7 @@ namespace BlackJackConsoleGame.Classes
                 {
                     int trippleBet;
                     _rules.Tripple(Player, Bet, out trippleBet);
+                    Player.CountOfChips -= (Bet / 2);
                     Bet = trippleBet;
                     Player.Set.Add(GetRandomCard());
 
@@ -235,6 +237,7 @@ namespace BlackJackConsoleGame.Classes
                     int insuranceBet;
 
                     _rules.Insurance(Dealer, Player, Bet, out insuranceBet);
+                    Player.CountOfChips -= insuranceBet;
                     Bet = insuranceBet;
 
                     ShowCards();

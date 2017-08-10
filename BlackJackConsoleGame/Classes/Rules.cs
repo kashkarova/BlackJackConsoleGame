@@ -36,7 +36,6 @@ namespace BlackJackConsoleGame.Classes
             }
 
             doubleBet = playersBet * 2;
-            player.CountOfChips-=playersBet;     
         }
 
         public void Tripple(Player player, int playersBet, out int trippleBet)
@@ -49,7 +48,6 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
             trippleBet = (playersBet / 2)+playersBet;
-            player.CountOfChips -= playersBet / 2;
         }
 
         public void Sarrendo(Player dealer, Player player, int playersBet, out int sarrendoBet)
@@ -69,7 +67,6 @@ namespace BlackJackConsoleGame.Classes
             }
 
             sarrendoBet = playersBet / 2;
-            player.CountOfChips += sarrendoBet;
         }
 
         public void Insurance(Player dealer, Player player, int playersBet, out int insuranceBet)
@@ -88,9 +85,7 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
 
-            insuranceBet = playersBet / 2;
-            player.CountOfChips -= insuranceBet;
-
+            insuranceBet = playersBet / 2;       
         }
 
         public bool Over(int playerSum)

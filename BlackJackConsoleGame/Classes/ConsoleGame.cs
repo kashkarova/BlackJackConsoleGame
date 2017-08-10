@@ -182,6 +182,27 @@ namespace BlackJackConsoleGame.Classes
 
         private void HitMe()
         {
+            if (Dealer.Set[0].Face == Face.Ace)
+            {
+                string answerInsurance;
+                Console.WriteLine("Do you want to make an insurance? y/n");
+                do
+                {
+                    answerInsurance = Console.ReadLine();
+                } while (answerInsurance != null && (!answerInsurance.Equals("y") && !answerInsurance.Equals("n")));
+
+                if (answerInsurance != null && answerInsurance.Equals("y"))
+                {
+                    HasInsurance = true;
+
+                    _rules.Insurance(Dealer, Player, Bet, out int insuranceBet);
+                    Player.CountOfChips -= insuranceBet;
+                    Bet = insuranceBet;
+
+                    ShowCards();
+                }
+            }
+
             string answerDouble;
             Console.WriteLine("Do you want to make a double? y/n");
             do
@@ -200,7 +221,7 @@ namespace BlackJackConsoleGame.Classes
 
                 ShowCards();
             }
-
+            
             if (HasDouble)
             {
                 string answerTripple;
@@ -219,30 +240,11 @@ namespace BlackJackConsoleGame.Classes
                     Player.Set.Add(GetRandomCard());
 
                     ShowCards();
+                    return;
                 }
-            }
+            }    
 
-            if (Dealer.Set[0].Face == Face.Ace)
-            {
-                string answerInsurance;
-                Console.WriteLine("Do you want to make an insurance? y/n");
-                do
-                {
-                    answerInsurance = Console.ReadLine();
-                } while (answerInsurance != null && (!answerInsurance.Equals("y") && !answerInsurance.Equals("n")));
-
-                if (answerInsurance != null && answerInsurance.Equals("y"))
-                {
-                    HasInsurance = true;
-                    int insuranceBet;
-
-                    _rules.Insurance(Dealer, Player, Bet, out insuranceBet);
-                    Player.CountOfChips -= insuranceBet;
-                    Bet = insuranceBet;
-
-                    ShowCards();
-                }
-            }
+            Player.Set.Add(GetRandomCard());
         }
 
         public void ShowCards()

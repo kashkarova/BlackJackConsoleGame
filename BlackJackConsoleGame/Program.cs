@@ -16,6 +16,7 @@ namespace BlackJackConsoleGame
                 string username;
                 int countOfChips;
                 int bet;
+                bool isValid;
 
                 Console.WriteLine("\n-----Add new player-----\n");
                 Console.Write("Add name: ");
@@ -24,18 +25,19 @@ namespace BlackJackConsoleGame
                     username = Console.ReadLine();
                 } while (username == null);
 
-                Console.Write("Add count of chips: ");
+                Console.Write("Add count of chips. Max value is 100: ");
+                
                 do
                 {
-                    int.TryParse(Console.ReadLine(), out countOfChips);
-                } while (countOfChips < 0);
+                    isValid = int.TryParse(Console.ReadLine(), out countOfChips);
+                } while (countOfChips < 0 || !isValid || countOfChips>100);
 
                 Console.WriteLine("\n-----Let`s set a bet-----\n");
                 Console.Write("Add bet: ");
                 do
                 {
-                    int.TryParse(Console.ReadLine(), out bet);
-                } while (bet < 0 || bet > countOfChips);
+                    isValid = int.TryParse(Console.ReadLine(), out bet);
+                } while (bet < 0 || bet > countOfChips || !isValid);
 
                 ConsoleGame game = new ConsoleGame();
                 game.Player = new Player(username, countOfChips);
@@ -53,6 +55,6 @@ namespace BlackJackConsoleGame
 
             Console.WriteLine("\nGoodbye, my love, goodbye...");
             Console.ReadKey();
-        } 
+        }
     }
 }

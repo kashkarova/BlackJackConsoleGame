@@ -25,12 +25,12 @@ namespace BlackJackConsoleGame
                     username = Console.ReadLine();
                 } while (username == null);
 
-                Console.Write("Add count of chips. Max value is 100: ");
+                Console.Write("Add count of chips. Max value is 500: ");
                 
                 do
                 {
                     isValid = int.TryParse(Console.ReadLine(), out countOfChips);
-                } while (countOfChips < 0 || !isValid || countOfChips>100);
+                } while (countOfChips < 0 || !isValid || countOfChips>500);
 
                 Console.WriteLine("\n-----Let`s set a bet-----\n");
                 Console.Write("Add bet: ");
@@ -53,7 +53,7 @@ namespace BlackJackConsoleGame
 
             } while (answer != null && answer.Equals("y"));
 
-            Console.WriteLine("\nGoodbye, my love, goodbye...");
+            Console.WriteLine("\nGoodbye...");
             Console.ReadKey();
         }
     }

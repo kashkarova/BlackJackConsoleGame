@@ -123,7 +123,7 @@ namespace BlackJackConsoleGame.Classes
 
                     if (_rules.BlackJack(Dealer) && HasInsurance)
                     {
-                        Console.WriteLine("You lose, but you have made an insurance. So, it has keeped your bet: " + Bet);
+                        Console.WriteLine("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet-(Bet/2)));
                         ShowCards();
                         break;
                     }

@@ -25,7 +25,7 @@ namespace BlackJackConsoleGame.Classes
 
             if (player.SumInHand <= 9)
             {
-                Console.WriteLine("Count of points in your hand ");
+                Console.WriteLine("Count of points in your hand doesn`t allow you to make a double!");
                 return;
             }            
 

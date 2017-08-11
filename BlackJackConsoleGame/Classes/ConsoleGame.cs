@@ -162,10 +162,15 @@ namespace BlackJackConsoleGame.Classes
             {
                 int sarrendoBet;
                 _rules.Sarrendo(Dealer, Player, Bet, out sarrendoBet);
-                Player.CountOfChips += sarrendoBet;
-                Bet = sarrendoBet;
-                ShowCards();
+
+                if (sarrendoBet > 0)
+                {
+                    Player.CountOfChips += sarrendoBet;
+                    Bet = sarrendoBet;
+                }
+                              
             }
+            ShowCards();
         }
 
         private Card GetRandomCard()
@@ -185,7 +190,7 @@ namespace BlackJackConsoleGame.Classes
             if (Dealer.Set[0].Face == Face.Ace)
             {
                 string answerInsurance;
-                Console.WriteLine("Do you want to make an insurance? y/n");
+                Console.WriteLine("Would you like to make an insurance? y/n");
                 do
                 {
                     answerInsurance = Console.ReadLine();
@@ -197,14 +202,14 @@ namespace BlackJackConsoleGame.Classes
 
                     _rules.Insurance(Dealer, Player, Bet, out int insuranceBet);
                     Player.CountOfChips -= insuranceBet;
-                    Bet = insuranceBet;
+                    Bet += insuranceBet;
 
                     ShowCards();
                 }
             }
 
             string answerDouble;
-            Console.WriteLine("Do you want to make a double? y/n");
+            Console.WriteLine("Would you like to make a double? y/n");
             do
             {
                 answerDouble = Console.ReadLine();
@@ -218,14 +223,13 @@ namespace BlackJackConsoleGame.Classes
                 Bet = doubleBet;
                 Player.Set.Add(GetRandomCard());
                 HasDouble = true;
-
                 ShowCards();
             }
-            
+
             if (HasDouble)
             {
                 string answerTripple;
-                Console.WriteLine("Do you want to make a tripple? y/n");
+                Console.WriteLine("Would you like to make a tripple? y/n");
                 do
                 {
                     answerTripple = Console.ReadLine();
@@ -242,9 +246,11 @@ namespace BlackJackConsoleGame.Classes
                     ShowCards();
                     return;
                 }
-            }    
+            }
+
 
             Player.Set.Add(GetRandomCard());
+            ShowCards();
         }
 
         public void ShowCards()
@@ -254,22 +260,25 @@ namespace BlackJackConsoleGame.Classes
             {
                 Console.WriteLine(card + "\n");
             }
-            Console.WriteLine("***************");
+            Console.WriteLine("*************************");
             Console.WriteLine("Sum in dealer`s hand: " + Dealer.SumInHand);
-            Console.WriteLine("***************\n");
+            Console.WriteLine("*************************\n");
 
             Console.WriteLine("\n-----" + Player.Name + "`s cards-----\n");
             foreach (var card in Player.Set)
             {
                 Console.WriteLine(card + "\n");
             }
-            Console.WriteLine("***************");
+            Console.WriteLine("*************************");
             Console.WriteLine("Sum in " + Player.Name + "`s hand: " + Player.SumInHand);
-            Console.WriteLine("***************\n");
+            Console.WriteLine("*************************");
 
-            Console.WriteLine("---------------\n");
-            Console.WriteLine("Count of chips: " + Player.CountOfChips + "\n");
-            Console.WriteLine("---------------\n");
+            Console.WriteLine("-------------------------");
+            Console.WriteLine("Count of chips: " + Player.CountOfChips);
+
+            Console.WriteLine("-------------------------");
+            Console.WriteLine("BET: " + Bet);
+            Console.WriteLine("-------------------------\n");
         }
     }
 }

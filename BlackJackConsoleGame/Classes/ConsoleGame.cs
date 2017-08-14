@@ -55,7 +55,6 @@ namespace BlackJackConsoleGame.Classes
             }
         }
 
-        //bet это ставка!!!
         public void SetBet(int bet)
         {
             if (Player.CountOfChips < bet)
@@ -73,10 +72,11 @@ namespace BlackJackConsoleGame.Classes
 
             do
             {
-                Console.WriteLine("Would you like to hit or stay? hit/stay");
+
                 string hitOrStay;
                 do
                 {
+                    Console.WriteLine("Would you like to hit or stay? hit/stay");
                     hitOrStay = Console.ReadLine();
                 } while (hitOrStay != null && (!hitOrStay.Equals("hit") && !hitOrStay.Equals("stay")));
 
@@ -85,6 +85,7 @@ namespace BlackJackConsoleGame.Classes
 
                 if (_rules.Over(Player.SumInHand))
                 {
+                    Console.Clear();
                     Console.WriteLine("It`s over! You lose!");
                     ShowCards();
                     break;
@@ -101,6 +102,7 @@ namespace BlackJackConsoleGame.Classes
 
                     if (_rules.BlackJack(Dealer) && _rules.BlackJack(Player))
                     {
+                        Console.Clear();
                         Console.WriteLine("You and dealer have BlackJack! You won " + Bet + " chips!");
                         ShowCards();
                         break;
@@ -108,6 +110,7 @@ namespace BlackJackConsoleGame.Classes
 
                     if (_rules.BlackJack(Player))
                     {
+                        Console.Clear();
                         Console.WriteLine("You have BlackJack! You won " + Bet * 2 + " chips!");
                         ShowCards();
                         break;
@@ -115,6 +118,7 @@ namespace BlackJackConsoleGame.Classes
 
                     if (_rules.Stay(Player.SumInHand, Dealer.SumInHand) || (_rules.BlackJack(Dealer) && !(HasInsurance)))
                     {
+                        Console.Clear();
                         Console.WriteLine("You lose!");
                         Bet = 0;
                         ShowCards();
@@ -123,17 +127,20 @@ namespace BlackJackConsoleGame.Classes
 
                     if (_rules.BlackJack(Dealer) && HasInsurance)
                     {
-                        Console.WriteLine("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet-(Bet/2)));
+                        Console.Clear();
+                        Console.WriteLine("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet - (Bet / 2)));
                         ShowCards();
                         break;
                     }
 
                     if (Dealer.SumInHand < Player.SumInHand)
                     {
+                        Console.Clear();
                         Console.WriteLine("It`s not a BlackJack, but you lose! Dealer has more points than you!");
                         break;
                     }
 
+                    Console.Clear();
                     Console.WriteLine("It`s not a BlackJack, but you won! You have more points than dealer!");
                     break;
                 }
@@ -151,10 +158,12 @@ namespace BlackJackConsoleGame.Classes
 
             if (Player.Set.Count != 2) return;
 
-            Console.WriteLine("Do you want to make sarrendo? y/n");
+            Console.Clear();
+
             string answer;
             do
             {
+                Console.WriteLine("Would you like to make a sarrendo? y/n");
                 answer = Console.ReadLine();
             } while (answer != null && (!answer.Equals("y") && !answer.Equals("n")));
 
@@ -168,8 +177,8 @@ namespace BlackJackConsoleGame.Classes
                     Player.CountOfChips += sarrendoBet;
                     Bet = sarrendoBet;
                 }
-                              
             }
+
             ShowCards();
         }
 
@@ -190,35 +199,41 @@ namespace BlackJackConsoleGame.Classes
             if (Dealer.Set[0].Face == Face.Ace)
             {
                 string answerInsurance;
-                Console.WriteLine("Would you like to make an insurance? y/n");
+
                 do
                 {
+                    Console.WriteLine("Would you like to make an insurance? y/n");
                     answerInsurance = Console.ReadLine();
                 } while (answerInsurance != null && (!answerInsurance.Equals("y") && !answerInsurance.Equals("n")));
-
+                int insuranceBet = 0;
                 if (answerInsurance != null && answerInsurance.Equals("y"))
+                    _rules.Insurance(Dealer, Player, Bet, out insuranceBet);
+
+                if (insuranceBet > 0)
                 {
                     HasInsurance = true;
-
-                    _rules.Insurance(Dealer, Player, Bet, out int insuranceBet);
                     Player.CountOfChips -= insuranceBet;
                     Bet += insuranceBet;
-
                     ShowCards();
                 }
             }
 
             string answerDouble;
-            Console.WriteLine("Would you like to make a double? y/n");
+            Console.Clear();
             do
             {
+                Console.WriteLine("Would you like to make a double? y/n");
                 answerDouble = Console.ReadLine();
             } while (answerDouble != null && (!answerDouble.Equals("y") && !answerDouble.Equals("n")));
 
+            int doubleBet = 0;
+
             if (answerDouble != null && answerDouble.Equals("y"))
-            {
-                int doubleBet;
                 _rules.Double(Player, Bet, out doubleBet);
+
+
+            if (doubleBet > 0)
+            {
                 Player.CountOfChips -= Bet;
                 Bet = doubleBet;
                 Player.Set.Add(GetRandomCard());
@@ -229,16 +244,20 @@ namespace BlackJackConsoleGame.Classes
             if (HasDouble)
             {
                 string answerTripple;
-                Console.WriteLine("Would you like to make a tripple? y/n");
+                Console.Clear();
                 do
                 {
+                    Console.WriteLine("Would you like to make a tripple? y/n");
                     answerTripple = Console.ReadLine();
                 } while (answerTripple != null && (!answerTripple.Equals("y") && !answerTripple.Equals("n")));
 
+                int trippleBet = 0;
+
                 if (answerTripple != null && answerTripple.Equals("y"))
-                {
-                    int trippleBet;
                     _rules.Tripple(Player, Bet, out trippleBet);
+
+                if (trippleBet > 0)
+                {
                     Player.CountOfChips -= (Bet / 2);
                     Bet = trippleBet;
                     Player.Set.Add(GetRandomCard());

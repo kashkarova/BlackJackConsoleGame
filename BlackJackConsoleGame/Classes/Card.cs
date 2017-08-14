@@ -1,11 +1,14 @@
-﻿namespace BlackJackConsoleGame.Classes
+﻿using System;
+using System.Text;
+
+namespace BlackJackConsoleGame.Classes
 {
     public enum Suit
     {
         Diamonds, //бубны
         Clubs,    //крести
         Spades,   //пики
-        Headrts   //червы
+        Hearts   //червы
     }
 
     public enum Face
@@ -40,7 +43,40 @@
 
         public override string ToString()
         {
-            return string.Format("Suit: {0} \nFace: {1} \nPoints: {2}", Suit, Face, Points);
+            Console.OutputEncoding = Encoding.UTF8;
+
+            string suit = "";
+            object color = null;
+
+            switch (Suit)
+            {
+                case Suit.Diamonds:
+                    {
+                        suit = "♦";
+                        break;
+                    }
+
+                case Suit.Clubs:
+                    {
+                        suit = "♣";
+                        break;
+                    }
+
+                case Suit.Hearts:
+                    {
+                        suit = "♥";
+                        break;
+                    }
+
+                case Suit.Spades:
+                    {
+                        suit = "♠";
+                        break;
+                    }
+
+            }
+
+            return string.Format(suit + " " + Face + " Points: " + Points);
         }
 
         public static int operator +(Card first, Card second)

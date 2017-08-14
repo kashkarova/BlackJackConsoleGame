@@ -13,10 +13,7 @@ namespace BlackJackConsoleGame.Classes
 
         public bool BlackJack(Player player)
         {
-            if (player.SumInHand == 21)
-                return true;
-
-            return false;
+            return player.SumInHand == 21;
         }
 
         public void Double(Player player, int playersBet, out int doubleBet)
@@ -27,7 +24,7 @@ namespace BlackJackConsoleGame.Classes
             {
                 Console.WriteLine("Count of points in your hand doesn`t allow you to make a double!");
                 return;
-            }            
+            }
 
             if (player.CountOfChips < playersBet)
             {
@@ -47,7 +44,7 @@ namespace BlackJackConsoleGame.Classes
                 Console.WriteLine("You have not enough chips to make a tripple!");
                 return;
             }
-            trippleBet = (playersBet / 2)+playersBet;
+            trippleBet = (playersBet / 2) + playersBet;
         }
 
         public void Sarrendo(Player dealer, Player player, int playersBet, out int sarrendoBet)
@@ -73,7 +70,7 @@ namespace BlackJackConsoleGame.Classes
         {
             insuranceBet = 0;
 
-            if (dealer.Set.Count==1 && dealer.Set[0].Face != Face.Ace)
+            if (dealer.Set.Count == 1 && dealer.Set[0].Face != Face.Ace)
             {
                 Console.WriteLine("This situation isn`t so bad for making insurance!");
                 return;
@@ -85,7 +82,7 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
 
-            insuranceBet = playersBet / 2;       
+            insuranceBet = playersBet / 2;
         }
 
         public bool Over(int playerSum)

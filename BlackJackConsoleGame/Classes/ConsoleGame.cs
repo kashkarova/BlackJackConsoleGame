@@ -16,6 +16,11 @@ namespace BlackJackConsoleGame.Classes
         public bool HasInsurance { get; private set; }
 
         private readonly IRules _rules;
+        private readonly IConsoleUI _consoleUI;
+
+        private const int CountOfSuits = 4;
+        private const int CountOfFaces = 13;
+
 
         public ConsoleGame(int percentInShoes, int countOfPack)
         {
@@ -29,6 +34,7 @@ namespace BlackJackConsoleGame.Classes
             HasInsurance = false;
 
             _rules = new Rules();
+            _consoleUI=new ConsoleUI();
         }
 
         public ConsoleGame()
@@ -43,9 +49,9 @@ namespace BlackJackConsoleGame.Classes
 
             for (var countIndex = 0; countIndex < CountOfPack; countIndex++)
             {
-                for (var suitIndex = 0; suitIndex < 4; suitIndex++)
+                for (var suitIndex = 0; suitIndex < CountOfSuits; suitIndex++)
                 {
-                    for (var faceIndex = 0; faceIndex < 13; faceIndex++)
+                    for (var faceIndex = 0; faceIndex < CountOfFaces; faceIndex++)
                     {
                         var card = new Card() { Suit = (Suit)suitIndex, Face = (Face)faceIndex };
 
@@ -83,11 +89,11 @@ namespace BlackJackConsoleGame.Classes
                 if (hitOrStay != null && hitOrStay.Equals("hit"))
                     HitMe();
 
-                if (_rules.Over(Player.SumInHand))
+                if (_rules.Over(Player.GetSumInHand()))
                 {
                     Console.Clear();
                     Console.WriteLine("It`s over! You lose!");
-                    ShowCards();
+                    _consoleUI.ShowCards(Dealer, Player, Bet);
                     break;
                 }
 
@@ -96,15 +102,15 @@ namespace BlackJackConsoleGame.Classes
                     do
                     {
                         Dealer.Set.Add(GetRandomCard());
-                    } while (Dealer.SumInHand < 17);
+                    } while (Dealer.GetSumInHand() < 17);
 
-                    ShowCards();
+                    _consoleUI.ShowCards(Dealer, Player, Bet);
 
                     if (_rules.BlackJack(Dealer) && _rules.BlackJack(Player))
                     {
                         Console.Clear();
                         Console.WriteLine("You and dealer have BlackJack! You won " + Bet + " chips!");
-                        ShowCards();
+                        _consoleUI.ShowCards(Dealer, Player, Bet);
                         break;
                     }
 
@@ -112,16 +118,16 @@ namespace BlackJackConsoleGame.Classes
                     {
                         Console.Clear();
                         Console.WriteLine("You have BlackJack! You won " + Bet * 2 + " chips!");
-                        ShowCards();
+                        _consoleUI.ShowCards(Dealer, Player, Bet);
                         break;
                     }
 
-                    if (_rules.Stay(Player.SumInHand, Dealer.SumInHand) || (_rules.BlackJack(Dealer) && !(HasInsurance)))
+                    if (_rules.Stay(Player.GetSumInHand(), Dealer.GetSumInHand()) || (_rules.BlackJack(Dealer) && !(HasInsurance)))
                     {
                         Console.Clear();
                         Console.WriteLine("You lose!");
                         Bet = 0;
-                        ShowCards();
+                        _consoleUI.ShowCards(Dealer, Player, Bet);
                         break;
                     }
 
@@ -129,11 +135,11 @@ namespace BlackJackConsoleGame.Classes
                     {
                         Console.Clear();
                         Console.WriteLine("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet - (Bet / 2)));
-                        ShowCards();
+                        _consoleUI.ShowCards(Dealer, Player, Bet);
                         break;
                     }
 
-                    if (Dealer.SumInHand < Player.SumInHand)
+                    if (Dealer.GetSumInHand() < Player.GetSumInHand())
                     {
                         Console.Clear();
                         Console.WriteLine("It`s not a BlackJack, but you lose! Dealer has more points than you!");
@@ -154,12 +160,12 @@ namespace BlackJackConsoleGame.Classes
             Player.Set.Add(GetRandomCard());
             Player.Set.Add(GetRandomCard());
 
-            ShowCards();
+            _consoleUI.ShowCards(Dealer, Player, Bet);
 
             if (Player.Set.Count != 2) return;
 
             Console.Clear();
-
+            _consoleUI.ShowCards(Dealer, Player, Bet);
             string answer;
             do
             {
@@ -179,7 +185,7 @@ namespace BlackJackConsoleGame.Classes
                 }
             }
 
-            ShowCards();
+            _consoleUI.ShowCards(Dealer, Player, Bet);
         }
 
         private Card GetRandomCard()
@@ -214,12 +220,13 @@ namespace BlackJackConsoleGame.Classes
                     HasInsurance = true;
                     Player.CountOfChips -= insuranceBet;
                     Bet += insuranceBet;
-                    ShowCards();
+                    _consoleUI.ShowCards(Dealer, Player, Bet);
                 }
             }
 
             string answerDouble;
             Console.Clear();
+            _consoleUI.ShowCards(Dealer, Player, Bet);
             do
             {
                 Console.WriteLine("Would you like to make a double? y/n");
@@ -238,7 +245,7 @@ namespace BlackJackConsoleGame.Classes
                 Bet = doubleBet;
                 Player.Set.Add(GetRandomCard());
                 HasDouble = true;
-                ShowCards();
+                _consoleUI.ShowCards(Dealer, Player, Bet);
             }
 
             if (HasDouble)
@@ -262,42 +269,14 @@ namespace BlackJackConsoleGame.Classes
                     Bet = trippleBet;
                     Player.Set.Add(GetRandomCard());
 
-                    ShowCards();
+                    _consoleUI.ShowCards(Dealer, Player, Bet);
                     return;
                 }
             }
 
 
             Player.Set.Add(GetRandomCard());
-            ShowCards();
-        }
-
-        public void ShowCards()
-        {
-            Console.WriteLine("\n-----Dealer`s cards-----\n");
-            foreach (var card in Dealer.Set)
-            {
-                Console.WriteLine(card + "\n");
-            }
-            Console.WriteLine("*************************");
-            Console.WriteLine("Sum in dealer`s hand: " + Dealer.SumInHand);
-            Console.WriteLine("*************************\n");
-
-            Console.WriteLine("\n-----" + Player.Name + "`s cards-----\n");
-            foreach (var card in Player.Set)
-            {
-                Console.WriteLine(card + "\n");
-            }
-            Console.WriteLine("*************************");
-            Console.WriteLine("Sum in " + Player.Name + "`s hand: " + Player.SumInHand);
-            Console.WriteLine("*************************");
-
-            Console.WriteLine("-------------------------");
-            Console.WriteLine("Count of chips: " + Player.CountOfChips);
-
-            Console.WriteLine("-------------------------");
-            Console.WriteLine("BET: " + Bet);
-            Console.WriteLine("-------------------------\n");
+            _consoleUI.ShowCards(Dealer, Player, Bet);
         }
     }
 }

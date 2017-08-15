@@ -3,86 +3,59 @@ using System.Text;
 
 namespace BlackJackConsoleGame.Classes
 {
-    public enum Suit
-    {
-        Diamonds, //бубны
-        Clubs,    //крести
-        Spades,   //пики
-        Hearts   //червы
-    }
-
-    public enum Face
-    {
-        Ace,
-        Two,
-        Three,
-        Four,
-        Five,
-        Six,
-        Seven,
-        Eight,
-        Nine,
-        Ten,
-        Jack,
-        Queen,
-        King
-    }
     public class Card
     {
         public Suit Suit;
         public Face Face;
-        public int Points
+
+        public int GetPoints()
         {
-            get
-            {
-                if (Face <= Face.Ten)
-                    return (int)Face + 1;
-                return 10;
-            }
+            if (Face <= Face.Ten)
+                return (int)Face + 1;
+            return 10;
         }
 
-        public override string ToString()
+        private string FormatSuit()
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            string suit = "";
-            object color = null;
+            string suit="";
 
             switch (Suit)
             {
                 case Suit.Diamonds:
-                    {
-                        suit = "♦";
-                        break;
-                    }
+                {
+                    suit = "♦";
+                    break;
+                }
 
                 case Suit.Clubs:
-                    {
-                        suit = "♣";
-                        break;
-                    }
+                {
+                    suit = "♣";
+                    break;
+                }
 
                 case Suit.Hearts:
-                    {
-                        suit = "♥";
-                        break;
-                    }
+                {
+                    suit = "♥";
+                    break;
+                }
 
                 case Suit.Spades:
-                    {
-                        suit = "♠";
-                        break;
-                    }
-
+                {
+                    suit = "♠";
+                    break;
+                }
             }
 
-            return string.Format(suit + " " + Face + " Points: " + Points);
+            return suit;
         }
 
-        public static int operator +(Card first, Card second)
+        public override string ToString()
         {
-            return first.Points + second.Points;
+           
+            return string.Format(FormatSuit() + " " + Face + " Points: " + GetPoints());
         }
-    }
 
+    }
 }

@@ -9,17 +9,14 @@ namespace BlackJackConsoleGame.Classes
         public int CountOfChips { get; set; }
         public List<Card> Set { get; set; }
 
-        public int SumInHand
+        public int GetSumInHand()
         {
-            get
-            {
-                var sum = Set.Sum(card => card.Points);
+            var sum = Set.Sum(card => card.GetPoints());
 
-                if (sum <= 11 && Set.Count(card => card.Face == Face.Ace) > 0)
-                    sum += 10;
+            if (sum <= 11 && Set.Count(card => card.Face == Face.Ace) > 0)
+                sum += 10;
 
-                return sum;
-            }
+            return sum;
         }
 
         public Player(string name, int chips)
@@ -37,7 +34,7 @@ namespace BlackJackConsoleGame.Classes
 
         public override string ToString()
         {
-            return string.Format("Name: {0} Count of chips: {1} Sum in hand: {2}", Name, CountOfChips, SumInHand);
+            return string.Format("Name: {0} Count of chips: {1} Sum in hand: {2}", Name, CountOfChips, GetSumInHand());
         }
     }
 

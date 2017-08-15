@@ -6,6 +6,8 @@ namespace BlackJackConsoleGame.Classes
 {
     public class Rules : IRules
     {
+        private const int BlackJackPoints = 21;
+
         public bool Stay(int playerSum, int dealerSum)
         {
             return playerSum == dealerSum;
@@ -13,24 +15,18 @@ namespace BlackJackConsoleGame.Classes
 
         public bool BlackJack(Player player)
         {
-            return player.SumInHand == 21;
+            return player.GetSumInHand() == BlackJackPoints;
         }
 
         public void Double(Player player, int playersBet, out int doubleBet)
         {
             doubleBet = 0;
 
-            if (player.SumInHand <= 9)
-            {
-                Console.WriteLine("Count of points in your hand doesn`t allow you to make a double!");
-                return;
-            }
+            if (player.GetSumInHand() <= 9)
+                throw new Exception("Count of points in your hand doesn`t allow you to make a double!");
 
             if (player.CountOfChips < playersBet)
-            {
-                Console.WriteLine("You have not enough chips to make a double!");
-                return;
-            }
+                throw new Exception("You have not enough chips to make a double!");
 
             doubleBet = playersBet * 2;
         }
@@ -40,28 +36,21 @@ namespace BlackJackConsoleGame.Classes
             trippleBet = 0;
 
             if (player.CountOfChips < playersBet / 2)
-            {
-                Console.WriteLine("You have not enough chips to make a tripple!");
-                return;
-            }
+                throw new Exception("You have not enough chips to make a tripple!");
+
             trippleBet = (playersBet / 2) + playersBet;
         }
 
         public void Sarrendo(Player dealer, Player player, int playersBet, out int sarrendoBet)
         {
+
             sarrendoBet = 0;
 
             if (dealer.Set[0].Face != Face.Ace)
-            {
-                Console.WriteLine("Set of your cards is not so bad for making sarrendo!");
-                return;
-            }
+                throw new Exception("Set of your cards is not so bad for making sarrendo!");
 
             if (player.Set.Count != 2)
-            {
-                Console.WriteLine("You cannot make sarrendo with this count of cards.");
-                return;
-            }
+                throw new Exception("You cannot make sarrendo with this count of cards.");
 
             sarrendoBet = playersBet / 2;
         }
@@ -71,23 +60,19 @@ namespace BlackJackConsoleGame.Classes
             insuranceBet = 0;
 
             if (dealer.Set.Count == 1 && dealer.Set[0].Face != Face.Ace)
-            {
-                Console.WriteLine("This situation isn`t so bad for making insurance!");
-                return;
-            }
+                throw new Exception("This situation isn`t so bad for making insurance!");
+
 
             if (player.CountOfChips < playersBet / 2)
-            {
-                Console.WriteLine("You have not enough chips to make an insurance!");
-                return;
-            }
+                throw new Exception("You have not enough chips to make an insurance!");
+
 
             insuranceBet = playersBet / 2;
         }
 
         public bool Over(int playerSum)
         {
-            return playerSum > 21;
+            return playerSum > BlackJackPoints;
         }
     }
 }

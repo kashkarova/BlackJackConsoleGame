@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BlackJackConsoleGame.Interfaces;
 
 namespace BlackJackConsoleGame.Classes
 {
-    public class ConsoleUI:IConsoleUI
+    public class ConsoleUi : IConsoleUi
     {
         public void ShowCards(Player dealer, Player player, int bet)
         {
@@ -39,54 +35,57 @@ namespace BlackJackConsoleGame.Classes
 
         public void StartGame()
         {
-            string answer;
+            string answer = "";
 
             do
             {
-                Console.Clear();
-                Console.WriteLine("-----Welcome to BlackJack game!-----\n");
-                string username;
-                int countOfChips;
-                int bet;
-                bool isValid;
+                StartGameAgain();
 
-                Console.WriteLine("\n-----Add new player-----\n");
-                do
-                {
-                    Console.Write("Add name: ");
-                    username = Console.ReadLine();
-                } while (username == null);
-
-
-                do
-                {
-                    Console.Write("Add count of chips. Max value is 500: ");
-                    isValid = int.TryParse(Console.ReadLine(), out countOfChips);
-                } while (countOfChips < 0 || !isValid || countOfChips > 500);
-
-                Console.WriteLine("\n-----Let`s set a bet-----\n");
-
-                do
-                {
-                    Console.Write("Add bet: ");
-                    isValid = int.TryParse(Console.ReadLine(), out bet);
-                } while (bet < 0 || bet > countOfChips || !isValid);
-
-                ConsoleGame game = new ConsoleGame { Player = new Player(username, countOfChips) };
-                game.SetBet(bet);
-
-                game.StartGame();
-
-                do
+                while (answer != null && (!answer.Equals("y") && !answer.Equals("n")))
                 {
                     Console.WriteLine("\nWould you like to start game again? y/n");
                     answer = Console.ReadLine();
-                } while (answer != null && (!answer.Equals("y") && !answer.Equals("n")));
-
+                }
             } while (answer != null && answer.Equals("y"));
 
             Console.WriteLine("\nGoodbye...Press any key.");
             Console.ReadKey();
+        }
+
+        public void StartGameAgain()
+        {
+            Console.Clear();
+            Console.WriteLine("-----Welcome to BlackJack game!-----\n");
+            string username = null;
+            int countOfChips = -1;
+            int bet = -1;
+            bool isValid = false;
+
+            Console.WriteLine("\n-----Add new player-----\n");
+            while (username == null || username.Equals(""))
+            {
+                Console.Write("Add name: ");
+                username = Console.ReadLine();
+            }
+
+            while (countOfChips < 0 || !isValid || countOfChips > 500)
+            {
+                Console.Write("Add count of chips. Max value is 500: ");
+                isValid = int.TryParse(Console.ReadLine(), out countOfChips);
+            }
+
+            Console.WriteLine("\n-----Let`s set a bet-----\n");
+
+            while (bet < 0 || bet > countOfChips || !isValid)
+            {
+                Console.Write("Add bet: ");
+                isValid = int.TryParse(Console.ReadLine(), out bet);
+            }
+
+            ConsoleGame game = new ConsoleGame { Player = new Player(username, countOfChips) };
+            game.SetBet(bet);
+
+            game.StartGame();
         }
     }
 }

@@ -7,6 +7,7 @@ namespace BlackJackConsoleGame.Classes
     public class Rules : IRules
     {
         private const int BlackJackPoints = 21;
+        private const int MinSumInHandForDouble = 9;
 
         public bool Stay(int playerSum, int dealerSum)
         {
@@ -18,11 +19,11 @@ namespace BlackJackConsoleGame.Classes
             return player.GetSumInHand() == BlackJackPoints;
         }
 
-        public void Double(Player player, int playersBet, out int doubleBet)
+        public void MakeDouble(Player player, int playersBet, out int doubleBet)
         {
             doubleBet = 0;
 
-            if (player.GetSumInHand() <= 9)
+            if (player.GetSumInHand() <= MinSumInHandForDouble)
                 throw new Exception("Count of points in your hand doesn`t allow you to make a double!");
 
             if (player.CountOfChips < playersBet)
@@ -31,7 +32,7 @@ namespace BlackJackConsoleGame.Classes
             doubleBet = playersBet * 2;
         }
 
-        public void Tripple(Player player, int playersBet, out int trippleBet)
+        public void MakeTripple(Player player, int playersBet, out int trippleBet)
         {
             trippleBet = 0;
 
@@ -41,7 +42,7 @@ namespace BlackJackConsoleGame.Classes
             trippleBet = (playersBet / 2) + playersBet;
         }
 
-        public void Sarrendo(Player dealer, Player player, int playersBet, out int sarrendoBet)
+        public void MakeSarrendo(Player dealer, Player player, int playersBet, out int sarrendoBet)
         {
 
             sarrendoBet = 0;
@@ -55,7 +56,7 @@ namespace BlackJackConsoleGame.Classes
             sarrendoBet = playersBet / 2;
         }
 
-        public void Insurance(Player dealer, Player player, int playersBet, out int insuranceBet)
+        public void MakeInsurance(Player dealer, Player player, int playersBet, out int insuranceBet)
         {
             insuranceBet = 0;
 

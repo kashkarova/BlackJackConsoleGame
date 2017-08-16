@@ -16,10 +16,11 @@ namespace BlackJackConsoleGame.Classes
         public bool HasInsurance { get; private set; }
 
         private readonly IRules _rules;
-        private readonly IConsoleUI _consoleUI;
+        private readonly IConsoleUi _consoleUi;
 
         private const int CountOfSuits = 4;
         private const int CountOfFaces = 13;
+        private const int MinSumInDealersHand = 17;
 
 
         public ConsoleGame(int percentInShoes, int countOfPack)
@@ -34,7 +35,7 @@ namespace BlackJackConsoleGame.Classes
             HasInsurance = false;
 
             _rules = new Rules();
-            _consoleUI=new ConsoleUI();
+            _consoleUi = new ConsoleUi();
         }
 
         public ConsoleGame()
@@ -76,82 +77,31 @@ namespace BlackJackConsoleGame.Classes
             InitializePack();
             StartRound();
 
-            do
+            while (Cards.Count > 0)
             {
 
-                string hitOrStay;
-                do
+                string hitOrStay = "";
+
+                while (hitOrStay == null || (!hitOrStay.Equals("hit") && !hitOrStay.Equals("stay")))
                 {
                     Console.WriteLine("Would you like to hit or stay? hit/stay");
                     hitOrStay = Console.ReadLine();
-                } while (hitOrStay != null && (!hitOrStay.Equals("hit") && !hitOrStay.Equals("stay")));
+                }
 
-                if (hitOrStay != null && hitOrStay.Equals("hit"))
+                if (hitOrStay.Equals("hit"))
                     HitMe();
 
                 if (_rules.Over(Player.GetSumInHand()))
                 {
                     Console.Clear();
                     Console.WriteLine("It`s over! You lose!");
-                    _consoleUI.ShowCards(Dealer, Player, Bet);
+                    _consoleUi.ShowCards(Dealer, Player, Bet);
                     break;
                 }
 
-                if (hitOrStay != null && hitOrStay.Equals("stay"))
-                {
-                    do
-                    {
-                        Dealer.Set.Add(GetRandomCard());
-                    } while (Dealer.GetSumInHand() < 17);
-
-                    _consoleUI.ShowCards(Dealer, Player, Bet);
-
-                    if (_rules.BlackJack(Dealer) && _rules.BlackJack(Player))
-                    {
-                        Console.Clear();
-                        Console.WriteLine("You and dealer have BlackJack! You won " + Bet + " chips!");
-                        _consoleUI.ShowCards(Dealer, Player, Bet);
-                        break;
-                    }
-
-                    if (_rules.BlackJack(Player))
-                    {
-                        Console.Clear();
-                        Console.WriteLine("You have BlackJack! You won " + Bet * 2 + " chips!");
-                        _consoleUI.ShowCards(Dealer, Player, Bet);
-                        break;
-                    }
-
-                    if (_rules.Stay(Player.GetSumInHand(), Dealer.GetSumInHand()) || (_rules.BlackJack(Dealer) && !(HasInsurance)))
-                    {
-                        Console.Clear();
-                        Console.WriteLine("You lose!");
-                        Bet = 0;
-                        _consoleUI.ShowCards(Dealer, Player, Bet);
-                        break;
-                    }
-
-                    if (_rules.BlackJack(Dealer) && HasInsurance)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet - (Bet / 2)));
-                        _consoleUI.ShowCards(Dealer, Player, Bet);
-                        break;
-                    }
-
-                    if (Dealer.GetSumInHand() < Player.GetSumInHand())
-                    {
-                        Console.Clear();
-                        Console.WriteLine("It`s not a BlackJack, but you lose! Dealer has more points than you!");
-                        break;
-                    }
-
-                    Console.Clear();
-                    Console.WriteLine("It`s not a BlackJack, but you won! You have more points than dealer!");
-                    break;
-                }
-
-            } while (Cards.Count > 0);
+                if (hitOrStay.Equals("stay"))
+                    Stay();
+            }
         }
 
         private void StartRound()
@@ -160,32 +110,34 @@ namespace BlackJackConsoleGame.Classes
             Player.Set.Add(GetRandomCard());
             Player.Set.Add(GetRandomCard());
 
-            _consoleUI.ShowCards(Dealer, Player, Bet);
+            _consoleUi.ShowCards(Dealer, Player, Bet);
 
             if (Player.Set.Count != 2) return;
 
             Console.Clear();
-            _consoleUI.ShowCards(Dealer, Player, Bet);
-            string answer;
-            do
+            _consoleUi.ShowCards(Dealer, Player, Bet);
+
+            string answer = "";
+
+            while (answer != null && (!answer.Equals("y") && !answer.Equals("n")))
             {
                 Console.WriteLine("Would you like to make a sarrendo? y/n");
                 answer = Console.ReadLine();
-            } while (answer != null && (!answer.Equals("y") && !answer.Equals("n")));
-
-            if (answer != null && answer.Equals("y"))
-            {
-                int sarrendoBet;
-                _rules.Sarrendo(Dealer, Player, Bet, out sarrendoBet);
-
-                if (sarrendoBet > 0)
-                {
-                    Player.CountOfChips += sarrendoBet;
-                    Bet = sarrendoBet;
-                }
             }
 
-            _consoleUI.ShowCards(Dealer, Player, Bet);
+            if (answer != null && answer.Equals("n"))
+                return;
+
+            int sarrendoBet;
+            _rules.MakeSarrendo(Dealer, Player, Bet, out sarrendoBet);
+
+            if (sarrendoBet > 0)
+            {
+                Player.CountOfChips += sarrendoBet;
+                Bet = sarrendoBet;
+            }
+
+            _consoleUi.ShowCards(Dealer, Player, Bet);
         }
 
         private Card GetRandomCard()
@@ -204,39 +156,42 @@ namespace BlackJackConsoleGame.Classes
         {
             if (Dealer.Set[0].Face == Face.Ace)
             {
-                string answerInsurance;
+                string answerInsurance="";
 
-                do
+                while (answerInsurance != null && (!answerInsurance.Equals("y") && !answerInsurance.Equals("n")))
                 {
                     Console.WriteLine("Would you like to make an insurance? y/n");
                     answerInsurance = Console.ReadLine();
-                } while (answerInsurance != null && (!answerInsurance.Equals("y") && !answerInsurance.Equals("n")));
+                } 
+
                 int insuranceBet = 0;
+
                 if (answerInsurance != null && answerInsurance.Equals("y"))
-                    _rules.Insurance(Dealer, Player, Bet, out insuranceBet);
+                    _rules.MakeInsurance(Dealer, Player, Bet, out insuranceBet);
 
                 if (insuranceBet > 0)
                 {
                     HasInsurance = true;
                     Player.CountOfChips -= insuranceBet;
                     Bet += insuranceBet;
-                    _consoleUI.ShowCards(Dealer, Player, Bet);
+                    _consoleUi.ShowCards(Dealer, Player, Bet);
                 }
             }
 
-            string answerDouble;
+            string answerDouble = "";
             Console.Clear();
-            _consoleUI.ShowCards(Dealer, Player, Bet);
-            do
+            _consoleUi.ShowCards(Dealer, Player, Bet);
+
+            while (answerDouble != null && (!answerDouble.Equals("y") && !answerDouble.Equals("n")))
             {
                 Console.WriteLine("Would you like to make a double? y/n");
                 answerDouble = Console.ReadLine();
-            } while (answerDouble != null && (!answerDouble.Equals("y") && !answerDouble.Equals("n")));
+            }
 
             int doubleBet = 0;
 
             if (answerDouble != null && answerDouble.Equals("y"))
-                _rules.Double(Player, Bet, out doubleBet);
+                _rules.MakeDouble(Player, Bet, out doubleBet);
 
 
             if (doubleBet > 0)
@@ -245,7 +200,7 @@ namespace BlackJackConsoleGame.Classes
                 Bet = doubleBet;
                 Player.Set.Add(GetRandomCard());
                 HasDouble = true;
-                _consoleUI.ShowCards(Dealer, Player, Bet);
+                _consoleUi.ShowCards(Dealer, Player, Bet);
             }
 
             if (HasDouble)
@@ -261,7 +216,7 @@ namespace BlackJackConsoleGame.Classes
                 int trippleBet = 0;
 
                 if (answerTripple != null && answerTripple.Equals("y"))
-                    _rules.Tripple(Player, Bet, out trippleBet);
+                    _rules.MakeTripple(Player, Bet, out trippleBet);
 
                 if (trippleBet > 0)
                 {
@@ -269,14 +224,51 @@ namespace BlackJackConsoleGame.Classes
                     Bet = trippleBet;
                     Player.Set.Add(GetRandomCard());
 
-                    _consoleUI.ShowCards(Dealer, Player, Bet);
+                    _consoleUi.ShowCards(Dealer, Player, Bet);
                     return;
                 }
             }
 
-
             Player.Set.Add(GetRandomCard());
-            _consoleUI.ShowCards(Dealer, Player, Bet);
+            _consoleUi.ShowCards(Dealer, Player, Bet);
+        }
+
+        private void Stay()
+        {
+            while (Dealer.GetSumInHand() < MinSumInDealersHand)
+                Dealer.Set.Add(GetRandomCard());
+
+            _consoleUi.ShowCards(Dealer, Player, Bet);
+
+            if (_rules.BlackJack(Dealer) && _rules.BlackJack(Player))
+            {
+                _consoleUi.ShowCards(Dealer, Player, Bet);
+                throw new Exception("You and dealer have BlackJack! You won " + Bet + " chips!");
+            }
+
+            if (_rules.BlackJack(Player))
+            {
+                _consoleUi.ShowCards(Dealer, Player, Bet);
+                throw new Exception("You have BlackJack! You won " + Bet * 2 + " chips!");
+            }
+
+            if (_rules.Stay(Player.GetSumInHand(), Dealer.GetSumInHand()) || (_rules.BlackJack(Dealer) && !(HasInsurance)))
+            {
+                Bet = 0;
+                _consoleUi.ShowCards(Dealer, Player, Bet);
+                throw new Exception("You lose!");
+            }
+
+            if (_rules.BlackJack(Dealer) && HasInsurance)
+            {
+                _consoleUi.ShowCards(Dealer, Player, Bet);
+                throw new Exception("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet - (Bet / 2)));
+            }
+
+            if (Dealer.GetSumInHand() < Player.GetSumInHand())
+                throw new Exception("It`s not a BlackJack, but you lose! Dealer has more points than you!");
+
+            throw new Exception("It`s not a BlackJack, but you won! You have more points than dealer!");
         }
     }
 }

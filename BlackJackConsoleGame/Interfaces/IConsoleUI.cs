@@ -2,9 +2,10 @@
 
 namespace BlackJackConsoleGame.Interfaces
 {
-    public interface IConsoleUI
+    public interface IConsoleUi
     {
         void ShowCards(Player dealer, Player player, int bet);
         void StartGame();
+        void StartGameAgain();
     }
 }

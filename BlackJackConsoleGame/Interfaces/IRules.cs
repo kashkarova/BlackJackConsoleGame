@@ -6,10 +6,10 @@ namespace BlackJackConsoleGame.Interfaces
     {
         bool Stay(int playerSum, int dealerSum);
         bool BlackJack(Player player);
-        void Double(Player player, int playersBet, out int doubleBet);
-        void Tripple(Player player, int playersBet, out int trippleBet);
-        void Sarrendo(Player dealer, Player player, int playersBet, out int sarrendoBet);
-        void Insurance(Player dealer, Player player, int playersBet, out int insuranceBet);
+        void MakeDouble(Player player, int playersBet, out int doubleBet);
+        void MakeTripple(Player player, int playersBet, out int trippleBet);
+        void MakeSarrendo(Player dealer, Player player, int playersBet, out int sarrendoBet);
+        void MakeInsurance(Player dealer, Player player, int playersBet, out int insuranceBet);
         bool Over(int playerSum);
     }
 }

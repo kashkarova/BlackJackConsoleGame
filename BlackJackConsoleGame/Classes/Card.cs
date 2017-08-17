@@ -52,8 +52,7 @@ namespace BlackJackConsoleGame.Classes
         }
 
         public override string ToString()
-        {
-           
+        {     
             return string.Format(FormatSuit() + " " + Face + " Points: " + GetPoints());
         }
 

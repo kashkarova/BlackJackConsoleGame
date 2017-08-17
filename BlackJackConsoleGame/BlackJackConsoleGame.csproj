@@ -43,12 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Card.cs" />
-    <Compile Include="Classes\ConsoleGame.cs" />
+    <Compile Include="Classes\Game.cs" />
     <Compile Include="Classes\ConsoleUI.cs" />
     <Compile Include="Classes\Face.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Rules.cs" />
     <Compile Include="Classes\Suit.cs" />
+    <Compile Include="Classes\TestClassEventMessage.cs" />
     <Compile Include="Interfaces\IConsoleUI.cs" />
     <Compile Include="Interfaces\IRules.cs" />
     <Compile Include="Program.cs" />

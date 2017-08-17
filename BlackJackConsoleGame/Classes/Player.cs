@@ -34,7 +34,7 @@ namespace BlackJackConsoleGame.Classes
 
         public override string ToString()
         {
-            return string.Format("Name: {0} Count of chips: {1} Sum in hand: {2}", Name, CountOfChips, GetSumInHand());
+            return $"Name: {Name} Count of chips: {CountOfChips} Sum in hand: {GetSumInHand()}";
         }
     }
 

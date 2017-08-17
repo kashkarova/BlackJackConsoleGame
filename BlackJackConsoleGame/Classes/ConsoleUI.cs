@@ -82,10 +82,25 @@ namespace BlackJackConsoleGame.Classes
                 isValid = int.TryParse(Console.ReadLine(), out bet);
             }
 
-            ConsoleGame game = new ConsoleGame { Player = new Player(username, countOfChips) };
+            Game game = new Game { Player = new Player(username, countOfChips) };
             game.SetBet(bet);
 
             game.StartGame();
+        }
+
+        public void MessageEventHandlerIfLoose()
+        {
+            Console.WriteLine("You lose!");
+        }
+
+        public void MessageEventHandlerIfWon()
+        {
+            Console.WriteLine("Congratulations! You won!");
+        }
+
+        public void MessageEventHandlerIfInputError()
+        {
+            Console.WriteLine("Error of input!");
         }
     }
 }

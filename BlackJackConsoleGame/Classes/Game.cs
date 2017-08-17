@@ -4,7 +4,7 @@ using BlackJackConsoleGame.Interfaces;
 
 namespace BlackJackConsoleGame.Classes
 {
-    internal class ConsoleGame
+    internal class Game
     {
         public List<Card> Cards { get; set; }
         public Player Player { get; set; }
@@ -22,8 +22,10 @@ namespace BlackJackConsoleGame.Classes
         private const int CountOfFaces = 13;
         private const int MinSumInDealersHand = 17;
 
+        private TestClassEventMessage _evt;
 
-        public ConsoleGame(int percentInShoes, int countOfPack)
+
+        public Game(int percentInShoes, int countOfPack)
         {
             Player = new Player();
             Dealer = new Player() { Name = "Dealer" };
@@ -36,9 +38,11 @@ namespace BlackJackConsoleGame.Classes
 
             _rules = new Rules();
             _consoleUi = new ConsoleUi();
+
+            _evt = new TestClassEventMessage();
         }
 
-        public ConsoleGame()
+        public Game()
             : this(100, 1)
         {
 
@@ -65,7 +69,12 @@ namespace BlackJackConsoleGame.Classes
         public void SetBet(int bet)
         {
             if (Player.CountOfChips < bet)
-                throw new Exception("You have not enough chips to make a bet!");
+            {
+                //throw new Exception("You have not enough chips to make a bet!");
+                _evt.MessageEvent += _consoleUi.MessageEventHandlerIfInputError;
+                _evt.OnMessageEvent();
+            }
+
 
             Bet = bet;
 
@@ -156,13 +165,13 @@ namespace BlackJackConsoleGame.Classes
         {
             if (Dealer.Set[0].Face == Face.Ace)
             {
-                string answerInsurance="";
+                string answerInsurance = "";
 
                 while (answerInsurance != null && (!answerInsurance.Equals("y") && !answerInsurance.Equals("n")))
                 {
                     Console.WriteLine("Would you like to make an insurance? y/n");
                     answerInsurance = Console.ReadLine();
-                } 
+                }
 
                 int insuranceBet = 0;
 
@@ -243,32 +252,46 @@ namespace BlackJackConsoleGame.Classes
             if (_rules.BlackJack(Dealer) && _rules.BlackJack(Player))
             {
                 _consoleUi.ShowCards(Dealer, Player, Bet);
-                throw new Exception("You and dealer have BlackJack! You won " + Bet + " chips!");
+                // throw new Exception("You and dealer have BlackJack! You won " + Bet + " chips!");
+                _evt.MessageEvent += _consoleUi.MessageEventHandlerIfWon;
+                _evt.OnMessageEvent();
             }
 
             if (_rules.BlackJack(Player))
             {
                 _consoleUi.ShowCards(Dealer, Player, Bet);
-                throw new Exception("You have BlackJack! You won " + Bet * 2 + " chips!");
+                //  throw new Exception("You have BlackJack! You won " + Bet * 2 + " chips!");
+                _evt.MessageEvent += _consoleUi.MessageEventHandlerIfWon;
+                _evt.OnMessageEvent();
             }
 
             if (_rules.Stay(Player.GetSumInHand(), Dealer.GetSumInHand()) || (_rules.BlackJack(Dealer) && !(HasInsurance)))
             {
                 Bet = 0;
                 _consoleUi.ShowCards(Dealer, Player, Bet);
-                throw new Exception("You lose!");
+                // throw new Exception("You lose!");
+                _evt.MessageEvent += _consoleUi.MessageEventHandlerIfLoose;
+                _evt.OnMessageEvent();
             }
 
             if (_rules.BlackJack(Dealer) && HasInsurance)
             {
                 _consoleUi.ShowCards(Dealer, Player, Bet);
-                throw new Exception("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet - (Bet / 2)));
+                //throw new Exception("You lose, but you have made an insurance. So, it has keeped your bet: " + (Bet - (Bet / 2)));
+                _evt.MessageEvent += _consoleUi.MessageEventHandlerIfLoose;
+                _evt.OnMessageEvent();
             }
 
             if (Dealer.GetSumInHand() < Player.GetSumInHand())
-                throw new Exception("It`s not a BlackJack, but you lose! Dealer has more points than you!");
+            {
+                //throw new Exception("It`s not a BlackJack, but you lose! Dealer has more points than you!");
+                _evt.MessageEvent += _consoleUi.MessageEventHandlerIfLoose;
 
-            throw new Exception("It`s not a BlackJack, but you won! You have more points than dealer!");
+            }
+
+            // throw new Exception("It`s not a BlackJack, but you won! You have more points than dealer!");
+            _evt.MessageEvent += _consoleUi.MessageEventHandlerIfWon;
+            _evt.OnMessageEvent();
         }
     }
 }

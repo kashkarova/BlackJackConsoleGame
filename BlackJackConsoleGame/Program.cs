@@ -3,13 +3,12 @@ using BlackJackConsoleGame.Interfaces;
 
 namespace BlackJackConsoleGame
 {
-    class Program
+    internal class Program
     {
         private static void Main()
         {
-            IConsoleUi consoleGame=new ConsoleUi();
-
-            consoleGame.StartGame();
+            IConsoleUI consoleGame = new ConsoleUI();
+            consoleGame.StartGameUI();
         }
     }
 }

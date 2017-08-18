@@ -2,7 +2,7 @@
 {
     public delegate void Message();
 
-    public class TestClassEventMessage
+    public class EventMessage
     {
         public event Message MessageEvent;
 

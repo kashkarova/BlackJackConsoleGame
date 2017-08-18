@@ -5,13 +5,13 @@ namespace BlackJackConsoleGame.Classes
 {
     public class Card
     {
-        public Suit Suit;
         public Face Face;
+        public Suit Suit;
 
         public int GetPoints()
         {
             if (Face <= Face.Ten)
-                return (int)Face + 1;
+                return (int) Face + 1;
             return 10;
         }
 
@@ -19,7 +19,7 @@ namespace BlackJackConsoleGame.Classes
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            string suit="";
+            var suit = "";
 
             switch (Suit)
             {
@@ -52,9 +52,8 @@ namespace BlackJackConsoleGame.Classes
         }
 
         public override string ToString()
-        {     
+        {
             return string.Format(FormatSuit() + " " + Face + " Points: " + GetPoints());
         }
-
     }
 }

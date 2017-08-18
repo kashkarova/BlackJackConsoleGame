@@ -3,24 +3,24 @@ using BlackJackConsoleGame.Interfaces;
 
 namespace BlackJackConsoleGame.Classes
 {
-    public class ConsoleUi : IConsoleUi
+    public class ConsoleUI : IConsoleUI
     {
         public void ShowCards(Player dealer, Player player, int bet)
         {
             Console.WriteLine("\n-----Dealer`s cards-----\n");
+
             foreach (var card in dealer.Set)
-            {
                 Console.WriteLine(card + "\n");
-            }
+
             Console.WriteLine("*************************");
             Console.WriteLine("Sum in dealer`s hand: " + dealer.GetSumInHand());
             Console.WriteLine("*************************\n");
 
             Console.WriteLine("\n-----" + player.Name + "`s cards-----\n");
+
             foreach (var card in player.Set)
-            {
                 Console.WriteLine(card + "\n");
-            }
+
             Console.WriteLine("*************************");
             Console.WriteLine("Sum in " + player.Name + "`s hand: " + player.GetSumInHand());
             Console.WriteLine("*************************");
@@ -33,33 +33,14 @@ namespace BlackJackConsoleGame.Classes
             Console.WriteLine("-------------------------\n");
         }
 
-        public void StartGame()
-        {
-            string answer = "";
-
-            do
-            {
-                StartGameAgain();
-
-                while (answer != null && (!answer.Equals("y") && !answer.Equals("n")))
-                {
-                    Console.WriteLine("\nWould you like to start game again? y/n");
-                    answer = Console.ReadLine();
-                }
-            } while (answer != null && answer.Equals("y"));
-
-            Console.WriteLine("\nGoodbye...Press any key.");
-            Console.ReadKey();
-        }
-
-        public void StartGameAgain()
+        public void InitialRound()
         {
             Console.Clear();
             Console.WriteLine("-----Welcome to BlackJack game!-----\n");
             string username = null;
-            int countOfChips = -1;
-            int bet = -1;
-            bool isValid = false;
+            var countOfChips = -1;
+            var bet = -1;
+            var isValid = false;
 
             Console.WriteLine("\n-----Add new player-----\n");
             while (username == null || username.Equals(""))
@@ -82,25 +63,29 @@ namespace BlackJackConsoleGame.Classes
                 isValid = int.TryParse(Console.ReadLine(), out bet);
             }
 
-            Game game = new Game { Player = new Player(username, countOfChips) };
+            var game = new Game {Player = new Player(username, countOfChips)};
             game.SetBet(bet);
 
             game.StartGame();
         }
 
-        public void MessageEventHandlerIfLoose()
+        public void StartGameUI()
         {
-            Console.WriteLine("You lose!");
-        }
+            var answer = "";
 
-        public void MessageEventHandlerIfWon()
-        {
-            Console.WriteLine("Congratulations! You won!");
-        }
+            do
+            {
+                InitialRound();
 
-        public void MessageEventHandlerIfInputError()
-        {
-            Console.WriteLine("Error of input!");
+                while (answer != null && !answer.Equals("y") && !answer.Equals("n"))
+                {
+                    Console.WriteLine("\nWould you like to start game again? y/n");
+                    answer = Console.ReadLine();
+                }
+            } while (answer != null && answer.Equals("y"));
+
+            Console.WriteLine("\nGoodbye...Press any key.");
+            Console.ReadKey();
         }
     }
 }

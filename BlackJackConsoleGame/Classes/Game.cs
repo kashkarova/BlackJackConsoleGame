@@ -83,19 +83,18 @@ namespace BlackJackConsoleGame.Classes
                 hitOrStay = _consoleUI.MakeHitOrStayUI();
 
                 if (hitOrStay.Equals("hit"))
-                    HitMe();
+                    MakeHit();
 
-                if (_rules.Over(Player.GetSumInHand()))
-                {
-                    _evt.MessageEvent += GameNotification.HandleActionIfLose;
-                    _evt.OnMessageEvent();
-                    _consoleUI.ShowCards(Dealer, Player, Bet);
-                    break;
-                }
-  
-                Stay();
+                if (!_rules.HaveOver(Player.GetSumInHand())) continue;
+
+                _evt.MessageEvent += GameNotification.HandleActionIfLose;
+                _evt.OnMessageEvent();
                 _consoleUI.ShowCards(Dealer, Player, Bet);
+                break;
             }
+
+            MakeStay();
+            _consoleUI.ShowCards(Dealer, Player, Bet);
         }
 
         private void StartRound()
@@ -151,7 +150,7 @@ namespace BlackJackConsoleGame.Classes
             _consoleUI.ShowCards(Dealer, Player, Bet);
         }
 
-        private void HitMe()
+        private void MakeHit()
         {
             if (Dealer.Set[0].Face == Face.Ace)
             {
@@ -196,14 +195,14 @@ namespace BlackJackConsoleGame.Classes
             _consoleUI.ShowCards(Dealer, Player, Bet);
         }
 
-        private void Stay()
+        private void MakeStay()
         {
             while (Dealer.GetSumInHand() < GameConstant.MinSumInDealersHand)
                 Dealer.Set.Add(GetRandomCard());
 
             _consoleUI.ShowCards(Dealer, Player, Bet);
 
-            if (_rules.BlackJack(Dealer) && _rules.BlackJack(Player))
+            if (_rules.HaveOver(Dealer.GetSumInHand()))
             {
                 _consoleUI.ShowCards(Dealer, Player, Bet);
                 _evt.MessageEvent += GameNotification.HandleActionIfWon;
@@ -211,7 +210,7 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
 
-            if (_rules.BlackJack(Player))
+            if (_rules.HaveBlackJack(Dealer) && _rules.HaveBlackJack(Player))
             {
                 _consoleUI.ShowCards(Dealer, Player, Bet);
                 _evt.MessageEvent += GameNotification.HandleActionIfWon;
@@ -219,7 +218,15 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
 
-            if (_rules.Stay(Player.GetSumInHand(), Dealer.GetSumInHand()) || _rules.BlackJack(Dealer) && !HasInsurance)
+            if (_rules.HaveBlackJack(Player))
+            {
+                _consoleUI.ShowCards(Dealer, Player, Bet);
+                _evt.MessageEvent += GameNotification.HandleActionIfWon;
+                _evt.OnMessageEvent();
+                return;
+            }
+
+            if (_rules.HaveStay(Player.GetSumInHand(), Dealer.GetSumInHand()) || _rules.HaveBlackJack(Dealer) && !HasInsurance)
             {
                 Bet = 0;
                 _consoleUI.ShowCards(Dealer, Player, Bet);
@@ -228,7 +235,7 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
 
-            if (_rules.BlackJack(Dealer) && HasInsurance)
+            if (_rules.HaveBlackJack(Dealer) && HasInsurance)
             {
                 _consoleUI.ShowCards(Dealer, Player, Bet);
                 _evt.MessageEvent += GameNotification.HandleActionIfLose;
@@ -236,7 +243,7 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
 
-            if (Dealer.GetSumInHand() > Player.GetSumInHand())
+            if (Dealer.GetSumInHand() > Player.GetSumInHand() && !_rules.HaveOver(Dealer.GetSumInHand()))
             {
                 _evt.MessageEvent += GameNotification.HandleActionIfLose;
                 _evt.OnMessageEvent();

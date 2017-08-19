@@ -22,7 +22,6 @@ namespace BlackJackConsoleGame.Classes
 
             if (player.GetSumInHand() <= GameConstant.MinSumInHandForDouble)
             {
-                //throw new Exception("Count of points in your hand doesn`t allow you to make a double!");
                 _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
                 _evt.OnMessageEvent();
                 return;
@@ -30,7 +29,6 @@ namespace BlackJackConsoleGame.Classes
 
             if (player.CountOfChips < playersBet)
             {
-                // throw new Exception("You have not enough chips to make a double!");
                 _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
                 _evt.OnMessageEvent();
                 return;
@@ -45,7 +43,6 @@ namespace BlackJackConsoleGame.Classes
 
             if (player.CountOfChips < playersBet / 2)
             {
-                //throw new Exception("You have not enough chips to make a tripple!");
                 _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
                 _evt.OnMessageEvent();
                 return;
@@ -60,7 +57,6 @@ namespace BlackJackConsoleGame.Classes
 
             if (dealer.Set[0].Face != Face.Ace)
             {
-                // throw new Exception("Set of your cards is not so bad for making sarrendo!");
                 _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
                 _evt.OnMessageEvent();
                 return;
@@ -68,7 +64,6 @@ namespace BlackJackConsoleGame.Classes
 
             if (player.Set.Count != 2)
             {
-                //throw new Exception("You cannot make sarrendo with this count of cards.");
                 _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
                 _evt.OnMessageEvent();
                 return;
@@ -83,7 +78,6 @@ namespace BlackJackConsoleGame.Classes
 
             if (dealer.Set.Count == 1 && dealer.Set[0].Face != Face.Ace)
             {
-                //throw new Exception("This situation isn`t so bad for making insurance!");
                 _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
                 _evt.OnMessageEvent();
                 return;
@@ -91,7 +85,6 @@ namespace BlackJackConsoleGame.Classes
 
             if (player.CountOfChips < playersBet / 2)
             {
-                // throw new Exception("You have not enough chips to make an insurance!");
                 _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
                 _evt.OnMessageEvent();
                 return;

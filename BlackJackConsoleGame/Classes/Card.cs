@@ -19,7 +19,7 @@ namespace BlackJackConsoleGame.Classes
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var suit = "";
+            string suit;
 
             switch (Suit)
             {
@@ -46,6 +46,8 @@ namespace BlackJackConsoleGame.Classes
                     suit = "♠";
                     break;
                 }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             return suit;

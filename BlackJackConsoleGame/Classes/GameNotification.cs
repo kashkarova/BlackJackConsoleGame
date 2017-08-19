@@ -6,7 +6,7 @@ namespace BlackJackConsoleGame.Classes
     {
         public static void HandleActionIfLose()
         {
-            Console.WriteLine("You lose!");
+            Console.WriteLine("Unfortunatelly, you lose!");
         }
 
         public static void HandleActionIfWon()
@@ -21,7 +21,7 @@ namespace BlackJackConsoleGame.Classes
 
         public static void HandleActionIfForbidAction()
         {
-            Console.WriteLine("Sorry, but you can`t do this!");
+            Console.WriteLine("Sorry, but you can`t do this action!");
         }
     }
 }

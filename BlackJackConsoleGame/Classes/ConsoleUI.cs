@@ -63,7 +63,7 @@ namespace BlackJackConsoleGame.Classes
                 isValid = int.TryParse(Console.ReadLine(), out bet);
             }
 
-            var game = new Game { Player = new Player(username, countOfChips) };
+            var game = new Game {Player = new Player(username, countOfChips)};
             game.SetBet(bet);
             game.StartGame();
         }
@@ -73,7 +73,7 @@ namespace BlackJackConsoleGame.Classes
             string answer;
 
             do
-            {              
+            {
                 InitialRoundUI();
                 answer = "";
 

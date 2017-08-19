@@ -33,7 +33,7 @@ namespace BlackJackConsoleGame.Classes
             Console.WriteLine("-------------------------\n");
         }
 
-        public void InitialRound()
+        public void InitialRoundUI()
         {
             Console.Clear();
             Console.WriteLine("-----Welcome to BlackJack game!-----\n");
@@ -65,17 +65,17 @@ namespace BlackJackConsoleGame.Classes
 
             var game = new Game { Player = new Player(username, countOfChips) };
             game.SetBet(bet);
-
             game.StartGame();
         }
 
         public void StartGameUI()
         {
-            var answer = "";
+            string answer;
 
             do
-            {
-                InitialRound();
+            {              
+                InitialRoundUI();
+                answer = "";
 
                 while (answer != null && !answer.Equals("y") && !answer.Equals("n"))
                 {

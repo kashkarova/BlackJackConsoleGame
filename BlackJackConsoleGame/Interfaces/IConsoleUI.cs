@@ -5,7 +5,7 @@ namespace BlackJackConsoleGame.Interfaces
     public interface IConsoleUI
     {
         void ShowCards(Player dealer, Player player, int bet);
-        void InitialRound();
+        void InitialRoundUI();
         void StartGameUI();
         bool MakeInsuranceUI();
         bool MakeSarrendoUI();

@@ -4,9 +4,6 @@ namespace BlackJackConsoleGame.Classes
 {
     public class Rules : IRules
     {
-        private readonly IConsoleUI _consoleUi = new ConsoleUI();
-
-
         private readonly EventMessage _evt = new EventMessage();
 
         public bool Stay(int playerSum, int dealerSum)

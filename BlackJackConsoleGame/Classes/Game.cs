@@ -96,8 +96,9 @@ namespace BlackJackConsoleGame.Classes
                 if (hitOrStay.Equals("stay"))
                 {
                     Stay();
-                    return;
+                    break;
                 }
+                    
 
                 _consoleUI.ShowCards(Dealer, Player, Bet);
             }
@@ -118,8 +119,7 @@ namespace BlackJackConsoleGame.Classes
             if (!_consoleUI.MakeSarrendoUI())
                 return;
 
-            int sarrendoBet;
-            _rules.MakeSarrendo(Dealer, Player, Bet, out sarrendoBet);
+            _rules.MakeSarrendo(Dealer, Player, Bet, out int sarrendoBet);
 
             if (sarrendoBet > 0)
             {
@@ -146,7 +146,6 @@ namespace BlackJackConsoleGame.Classes
         {
             if (Dealer.Set[0].Face == Face.Ace)
             {
-
                 var insuranceBet = 0;
 
                 if (_consoleUI.MakeInsuranceUI())
@@ -164,6 +163,7 @@ namespace BlackJackConsoleGame.Classes
             _consoleUI.ShowCards(Dealer, Player, Bet);
 
             var doubleBet = 0;
+            HasDouble = false;
 
             if (_consoleUI.MakeDoubleUI())
                 _rules.MakeDouble(Player, Bet, out doubleBet);
@@ -177,7 +177,7 @@ namespace BlackJackConsoleGame.Classes
                 _consoleUI.ShowCards(Dealer, Player, Bet);
             }
 
-            if (!HasDouble)
+            if (HasDouble == false)
             {
                 Player.Set.Add(GetRandomCard());
                 _consoleUI.ShowCards(Dealer, Player, Bet);
@@ -189,14 +189,13 @@ namespace BlackJackConsoleGame.Classes
             if (_consoleUI.MakeTrippleUI())
                 _rules.MakeTripple(Player, Bet, out trippleBet);
 
-            if (trippleBet > 0)
-            {
-                Player.CountOfChips -= Bet / 2;
-                Bet = trippleBet;
-                Player.Set.Add(GetRandomCard());
+            if (trippleBet <= 0) return;
 
-                _consoleUI.ShowCards(Dealer, Player, Bet);
-            }
+            Player.CountOfChips -= Bet / 2;
+            Bet = trippleBet;
+            Player.Set.Add(GetRandomCard());
+
+            _consoleUI.ShowCards(Dealer, Player, Bet);
         }
 
         private void Stay()

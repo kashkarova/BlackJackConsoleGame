@@ -7,5 +7,10 @@ namespace BlackJackConsoleGame.Interfaces
         void ShowCards(Player dealer, Player player, int bet);
         void InitialRound();
         void StartGameUI();
+        bool MakeInsuranceUI();
+        bool MakeSarrendoUI();
+        bool MakeDoubleUI();
+        bool MakeTrippleUI();
+        string MakeHitOrStayUI();
     }
 }

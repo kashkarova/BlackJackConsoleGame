@@ -6,12 +6,12 @@ namespace BlackJackConsoleGame.Classes
     {
         private readonly EventMessage _evt = new EventMessage();
 
-        public bool HaveStay(int playerSum, int dealerSum)
+        public bool HasStay(int playerSum, int dealerSum)
         {
             return playerSum == dealerSum;
         }
 
-        public bool HaveBlackJack(Player player)
+        public bool HasBlackJack(Player player)
         {
             return player.GetSumInHand() == GameConstant.BlackJackPoints;
         }
@@ -93,7 +93,7 @@ namespace BlackJackConsoleGame.Classes
             insuranceBet = playersBet / 2;
         }
 
-        public bool HaveOver(int playerSum)
+        public bool HasOver(int playerSum)
         {
             return playerSum > GameConstant.BlackJackPoints;
         }

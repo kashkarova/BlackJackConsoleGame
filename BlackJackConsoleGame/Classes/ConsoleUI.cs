@@ -33,7 +33,7 @@ namespace BlackJackConsoleGame.Classes
             Console.WriteLine("-------------------------\n");
         }
 
-        public void InitialRoundUI()
+        public void InitialRound()
         {
             Console.Clear();
             Console.WriteLine("-----Welcome to BlackJack game!-----\n");
@@ -43,7 +43,7 @@ namespace BlackJackConsoleGame.Classes
             var isValid = false;
 
             Console.WriteLine("\n-----Add new player-----\n");
-            while (username == null || username.Equals(""))
+            while (string.IsNullOrWhiteSpace(username))
             {
                 Console.Write("Add name: ");
                 username = Console.ReadLine();
@@ -57,110 +57,116 @@ namespace BlackJackConsoleGame.Classes
 
             Console.WriteLine("\n-----Let`s set a bet-----\n");
 
-            while (bet < 0 || bet > countOfChips || !isValid)
+            while (bet <= 0 || bet > countOfChips || !isValid)
             {
                 Console.Write("Add bet: ");
                 isValid = int.TryParse(Console.ReadLine(), out bet);
             }
 
-            var game = new Game {Player = new Player(username, countOfChips)};
+            var game = new Game { Player = new Player(username, countOfChips) };
             game.SetBet(bet);
             game.StartGame();
         }
 
-        public void StartGameUI()
+        public void StartGame()
         {
             string answer;
 
             do
             {
-                InitialRoundUI();
-                answer = "";
+                InitialRound();
+                answer = null;
 
-                while (answer != null && !answer.Equals("y") && !answer.Equals("n"))
+                while (string.IsNullOrWhiteSpace(answer) || (answer != "n" && answer != "y"))
                 {
-                    Console.WriteLine("\nWould you like to start game again? y/n");
+                    Console.WriteLine("Would you like to start game again? y/n");
                     answer = Console.ReadLine();
                 }
-            } while (answer != null && answer.Equals("y"));
 
-            Console.WriteLine("\nGoodbye...Press any key.");
+            } while (answer == "y");
+
+            Console.WriteLine("Goodbye...Press any key.");
             Console.ReadKey();
         }
 
-        public bool MakeInsuranceUI()
+        public bool MakeInsurance()
         {
             var answerInsurance = "";
 
-            while (answerInsurance != null && !answerInsurance.Equals("y") && !answerInsurance.Equals("n"))
+            while (string.IsNullOrWhiteSpace(answerInsurance) || (answerInsurance != "y" && answerInsurance != "n"))
             {
                 Console.WriteLine("Would you like to make an insurance? y/n");
                 answerInsurance = Console.ReadLine();
             }
 
-            if (answerInsurance != null && answerInsurance.Equals("n"))
+            if (answerInsurance == "n")
                 return false;
 
             return true;
         }
 
-        public bool MakeSarrendoUI()
+        public bool MakeSarrendo()
         {
             var answer = "";
 
-            while (answer != null && !answer.Equals("y") && !answer.Equals("n"))
+            while (string.IsNullOrWhiteSpace(answer) || (answer != "y" && answer != "n"))
             {
                 Console.WriteLine("Would you like to make a sarrendo? y/n");
                 answer = Console.ReadLine();
             }
 
-            if (answer != null && answer.Equals("n"))
+            if (answer == "n")
                 return false;
 
             return true;
         }
 
-        public bool MakeDoubleUI()
+        public bool MakeDouble()
         {
             var answerDouble = "";
-            while (answerDouble != null && !answerDouble.Equals("y") && !answerDouble.Equals("n"))
+
+            while (string.IsNullOrWhiteSpace(answerDouble) || (answerDouble != "y" && answerDouble != "n"))
             {
                 Console.WriteLine("Would you like to make a double? y/n");
                 answerDouble = Console.ReadLine();
             }
 
-            if (answerDouble != null && answerDouble.Equals("n"))
+            if (answerDouble == "n")
                 return false;
 
             return true;
         }
 
-        public bool MakeTrippleUI()
+        public bool MakeTripple()
         {
-            string answerTripple;
-            do
+            var answerTripple="";
+
+            while (string.IsNullOrWhiteSpace(answerTripple) || (answerTripple != "y" && answerTripple != "n"))
             {
                 Console.WriteLine("Would you like to make a tripple? y/n");
                 answerTripple = Console.ReadLine();
-            } while (answerTripple != null && !answerTripple.Equals("y") && !answerTripple.Equals("n"));
+            }
 
-            if (answerTripple != null && answerTripple.Equals("n"))
+            if (answerTripple == "n")
                 return false;
 
             return true;
         }
 
-        public string MakeHitOrStayUI()
+        public int ChooseHitOrStay()
         {
             var hitOrStay = "";
 
-            while (hitOrStay == null || !hitOrStay.Equals("hit") && !hitOrStay.Equals("stay"))
+            while (string.IsNullOrWhiteSpace(hitOrStay) || (hitOrStay != "hit" && hitOrStay != "stay"))
             {
                 Console.WriteLine("Would you like to hit or stay? hit/stay");
                 hitOrStay = Console.ReadLine();
             }
 
-            return hitOrStay;
+            if (hitOrStay == "hit")
+                return 0;
+
+            return 1;
         }
     }
 }

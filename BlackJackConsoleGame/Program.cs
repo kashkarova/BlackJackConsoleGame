@@ -8,7 +8,7 @@ namespace BlackJackConsoleGame
         private static void Main()
         {
             IConsoleUI consoleGame = new ConsoleUI();
-            consoleGame.StartGameUI();
+            consoleGame.StartGame();
         }
     }
 }

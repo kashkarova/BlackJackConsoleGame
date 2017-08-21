@@ -52,6 +52,7 @@
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Rules.cs" />
     <Compile Include="Classes\Suit.cs" />
+    <Compile Include="Classes\UserChooses.cs" />
     <Compile Include="Interfaces\IConsoleUI.cs" />
     <Compile Include="Interfaces\IRules.cs" />
     <Compile Include="Program.cs" />

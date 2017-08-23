@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlackJackConsoleGame
+namespace BlackJackConsoleGame.Classes
 {
     public static class Message
     {

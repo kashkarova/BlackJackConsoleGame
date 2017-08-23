@@ -31,12 +31,12 @@ namespace BlackJackConsoleGame.Classes
         {
         }
 
-        public List<Card> Cards { get; set; }
-        public Player Player { get; set; }
-        public Player Dealer { get; }
-        public int PercentInShoes { get; set; }
-        public int CountOfPack { get; set; }
-        public int Bet { get; set; }
+        public List<Card> Cards;
+        public Player Player;
+        public Player Dealer;
+        public int PercentInShoes;
+        public int CountOfPack;
+        public int Bet;
 
 
         public void SetPlayer(string name, int chips)
@@ -132,7 +132,7 @@ namespace BlackJackConsoleGame.Classes
                 return;
             }
 
-            Bet = bet;
+            this.Bet = bet;
 
             Player.CountOfChips -= bet;
         }
@@ -147,6 +147,91 @@ namespace BlackJackConsoleGame.Classes
             Cards.Remove(card);
 
             return card;
+        }
+
+        public bool HasStay()
+        {
+            return GetSumInHand(Player) == GetSumInHand(Dealer);
+        }
+
+        public bool HasBlackJack(int sumInHand)
+        {
+            return sumInHand == BlackJackPoints;
+        }
+
+        public void MakeDouble(int sumInHand, out int doubleBet)
+        {
+            doubleBet = 0;
+
+            if (sumInHand <= MinSumInHandForDouble)
+            {
+                Message.HandleActionIfForbidAction();
+                return;
+            }
+
+            if (Player.CountOfChips < Bet)
+            {
+                Message.HandleActionIfForbidAction();
+                return;
+            }
+
+            doubleBet = Bet * 2;
+        }
+
+        public void MakeTripple(out int trippleBet)
+        {
+            trippleBet = 0;
+
+            if (Player.CountOfChips < Bet / 2)
+            {
+                Message.HandleActionIfForbidAction();
+                return;
+            }
+
+            trippleBet = Bet / 2 + Bet;
+        }
+
+        public void MakeSarrendo(out int sarrendoBet)
+        {
+            sarrendoBet = 0;
+
+            if (Dealer.Set[0].Face != Face.Ace)
+            {
+                Message.HandleActionIfForbidAction();
+                return;
+            }
+
+            if (Player.Set.Count != 2)
+            {
+                Message.HandleActionIfForbidAction();
+                return;
+            }
+
+            sarrendoBet = Bet / 2;
+        }
+
+        public void MakeInsurance(out int insuranceBet)
+        {
+            insuranceBet = 0;
+
+            if (Dealer.Set.Count == 1 && Dealer.Set[0].Face != Face.Ace)
+            {
+                Message.HandleActionIfForbidAction();
+                return;
+            }
+
+            if (Player.CountOfChips < Bet / 2)
+            {
+                Message.HandleActionIfForbidAction();
+                return;
+            }
+
+            insuranceBet = Bet / 2;
+        }
+
+        public bool HasOver(int playerSum)
+        {
+            return playerSum > BlackJackPoints;
         }
     }
 }

@@ -5,7 +5,6 @@ namespace BlackJackConsoleGame.Classes
     public class GameCycle
     {
         private readonly Game _game;
-        private readonly Rules _rules;
         private readonly ActionUI _actionUI;
 
         public bool HasDouble { get; private set; }
@@ -14,7 +13,6 @@ namespace BlackJackConsoleGame.Classes
         public GameCycle()
         {
             _game = new Game();
-            _rules = new Rules();
             _actionUI = new ActionUI();
 
             HasDouble = false;
@@ -44,7 +42,7 @@ namespace BlackJackConsoleGame.Classes
 
         private void StartGameCycle()
         {
-            DisplayInformation.DisplayStartGame(_game);
+            ActionUI.DisplayStartGame(_game);
 
             _game.InitializePack();
             StartRound();
@@ -56,20 +54,20 @@ namespace BlackJackConsoleGame.Classes
                 if (userChoose == (int)UserChooses.Hit)
                 {
                     MakeHit();
-                    DisplayInformation.ShowSetOfCards(_game);
+                    ActionUI.ShowSetOfCards(_game);
                 }
 
-                if (_rules.HasOver(_game.GetSumInHand(_game.Player)))
+                if (_game.HasOver(_game.GetSumInHand(_game.Player)))
                 {
                     Message.HandleActionIfLose();
-                    DisplayInformation.ShowSetOfCards(_game);
+                    ActionUI.ShowSetOfCards(_game);
                     break;
                 }
 
                 if (userChoose == (int)UserChooses.Stay)
                 {
                     MakeStay();
-                    DisplayInformation.ShowSetOfCards(_game);
+                    ActionUI.ShowSetOfCards(_game);
                     return;
                 }
             }
@@ -81,14 +79,14 @@ namespace BlackJackConsoleGame.Classes
             _game.Player.Set.Add(_game.GetRandomCard());
             _game.Player.Set.Add(_game.GetRandomCard());
 
-            DisplayInformation.ShowSetOfCards(_game);
+            ActionUI.ShowSetOfCards(_game);
 
             if (_game.Player.Set.Count != 2) return;
 
             if (!_actionUI.MakeSarrendo())
                 return;
 
-            _rules.MakeSarrendo(_game.Dealer, _game.Player, _game.Bet, out int sarrendoBet);
+            _game.MakeSarrendo(out int sarrendoBet);
 
             if (sarrendoBet > 0)
             {
@@ -102,7 +100,7 @@ namespace BlackJackConsoleGame.Classes
             var insuranceBet = 0;
 
             if (_actionUI.MakeInsurance())
-                _rules.MakeInsurance(_game.Dealer, _game.Player, _game.Bet, out insuranceBet);
+                _game.MakeInsurance(out insuranceBet);
 
             if (insuranceBet <= 0) return;
 
@@ -122,7 +120,7 @@ namespace BlackJackConsoleGame.Classes
             HasDouble = false;
 
             if (_actionUI.MakeDouble())
-                _rules.MakeDouble(_game.GetSumInHand(_game.Player), _game.Player, _game.Bet, out doubleBet);
+                _game.MakeDouble(_game.GetSumInHand(_game.Player), out doubleBet);
 
             if (doubleBet > 0)
             {
@@ -141,7 +139,7 @@ namespace BlackJackConsoleGame.Classes
             var trippleBet = 0;
 
             if (_actionUI.MakeTripple())
-                _rules.MakeTripple(_game.Player, _game.Bet, out trippleBet);
+                _game.MakeTripple(out trippleBet);
 
             if (trippleBet <= 0) return;
 
@@ -155,38 +153,38 @@ namespace BlackJackConsoleGame.Classes
             while (_game.GetSumInHand(_game.Dealer) < Game.MinSumInDealersHand)
                 _game.Dealer.Set.Add(_game.GetRandomCard());
 
-            if (_rules.HasOver(_game.GetSumInHand(_game.Dealer)))
+            if (_game.HasOver(_game.GetSumInHand(_game.Dealer)))
             {
                 Message.HandleActionIfWon();
                 return;
             }
 
-            if (_rules.HasBlackJack(_game.GetSumInHand(_game.Dealer)) && _rules.HasBlackJack(_game.GetSumInHand(_game.Player)))
+            if (_game.HasBlackJack(_game.GetSumInHand(_game.Dealer)) && _game.HasBlackJack(_game.GetSumInHand(_game.Player)))
             {
                 Message.HandleActionIfWon();
                 return;
             }
 
-            if (_rules.HasBlackJack(_game.GetSumInHand(_game.Player)))
+            if (_game.HasBlackJack(_game.GetSumInHand(_game.Player)))
             {
                 Message.HandleActionIfWon();
                 return;
             }
 
-            if (_rules.HasStay(_game.GetSumInHand(_game.Player), _game.GetSumInHand(_game.Dealer)) || _rules.HasBlackJack(_game.GetSumInHand(_game.Dealer)) && !HasInsurance)
+            if (_game.HasStay() || _game.HasBlackJack(_game.GetSumInHand(_game.Dealer)) && !HasInsurance)
             {
                 _game.Bet = 0;
                 Message.HandleActionIfLose();
                 return;
             }
 
-            if (_rules.HasBlackJack(_game.GetSumInHand(_game.Dealer)) && HasInsurance)
+            if (_game.HasBlackJack(_game.GetSumInHand(_game.Dealer)) && HasInsurance)
             {
                 Message.HandleActionIfLose();
                 return;
             }
 
-            if (_game.GetSumInHand(_game.Dealer) > _game.GetSumInHand(_game.Player) && !_rules.HasOver(_game.GetSumInHand(_game.Dealer)))
+            if (_game.GetSumInHand(_game.Dealer) > _game.GetSumInHand(_game.Player) && !_game.HasOver(_game.GetSumInHand(_game.Dealer)))
             {
                 Message.HandleActionIfLose();
                 return;

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace BlackJackConsoleGame.Classes
+namespace BlackJackConsoleGame
 {
-    public static class GameNotification
+    public static class Message
     {
         public static void HandleActionIfLose()
         {

@@ -2,9 +2,9 @@
 {
     public enum Suit
     {
-        Diamonds = 0, //бубны
-        Clubs = 1, //крести
-        Spades = 2, //пики
-        Hearts = 3 //червы
+        Diamonds = 0, 
+        Clubs = 1, 
+        Spades = 2,
+        Hearts = 3 
     }
 }

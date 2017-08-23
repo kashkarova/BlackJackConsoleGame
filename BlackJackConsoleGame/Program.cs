@@ -1,5 +1,4 @@
 ﻿using BlackJackConsoleGame.Classes;
-using BlackJackConsoleGame.Interfaces;
 
 namespace BlackJackConsoleGame
 {
@@ -7,8 +6,8 @@ namespace BlackJackConsoleGame
     {
         private static void Main()
         {
-            IConsoleUI consoleGame = new ConsoleUI();
-            consoleGame.StartGame();
+            GameCycle game = new GameCycle();
+            game.StartGame();
         }
     }
 }

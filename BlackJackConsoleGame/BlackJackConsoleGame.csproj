@@ -42,19 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ActionUI.cs" />
     <Compile Include="Classes\Card.cs" />
-    <Compile Include="Classes\EventMessage.cs" />
+    <Compile Include="Classes\DisplayInformation.cs" />
     <Compile Include="Classes\Game.cs" />
-    <Compile Include="Classes\ConsoleUI.cs" />
     <Compile Include="Classes\Face.cs" />
-    <Compile Include="Classes\GameConstant.cs" />
-    <Compile Include="Classes\GameNotification.cs" />
+    <Compile Include="Classes\GameCycle.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Rules.cs" />
     <Compile Include="Classes\Suit.cs" />
     <Compile Include="Classes\UserChooses.cs" />
-    <Compile Include="Interfaces\IConsoleUI.cs" />
-    <Compile Include="Interfaces\IRules.cs" />
+    <Compile Include="Classes\Message.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

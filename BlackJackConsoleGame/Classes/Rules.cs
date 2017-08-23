@@ -1,40 +1,34 @@
-﻿using BlackJackConsoleGame.Interfaces;
-
-namespace BlackJackConsoleGame.Classes
+﻿namespace BlackJackConsoleGame.Classes
 {
-    public class Rules : IRules
+    public class Rules
     {
-        private readonly EventMessage _evt = new EventMessage();
-
         public bool HasStay(int playerSum, int dealerSum)
         {
             return playerSum == dealerSum;
         }
 
-        public bool HasBlackJack(Player player)
+        public bool HasBlackJack(int sumInHand)
         {
-            return player.GetSumInHand() == GameConstant.BlackJackPoints;
+            return sumInHand == Game.BlackJackPoints;
         }
 
-        public void MakeDouble(Player player, int playersBet, out int doubleBet)
+        public void MakeDouble(int sumInHand, Player player, int bet, out int doubleBet)
         {
             doubleBet = 0;
 
-            if (player.GetSumInHand() <= GameConstant.MinSumInHandForDouble)
+            if (sumInHand <= Game.MinSumInHandForDouble)
             {
-                _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
-                _evt.OnMessageEvent();
+                Message.HandleActionIfForbidAction();
                 return;
             }
 
-            if (player.CountOfChips < playersBet)
+            if (player.CountOfChips < bet)
             {
-                _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
-                _evt.OnMessageEvent();
+                Message.HandleActionIfForbidAction();
                 return;
             }
 
-            doubleBet = playersBet * 2;
+            doubleBet = bet * 2;
         }
 
         public void MakeTripple(Player player, int playersBet, out int trippleBet)
@@ -43,8 +37,7 @@ namespace BlackJackConsoleGame.Classes
 
             if (player.CountOfChips < playersBet / 2)
             {
-                _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
-                _evt.OnMessageEvent();
+                Message.HandleActionIfForbidAction();
                 return;
             }
 
@@ -57,15 +50,13 @@ namespace BlackJackConsoleGame.Classes
 
             if (dealer.Set[0].Face != Face.Ace)
             {
-                _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
-                _evt.OnMessageEvent();
+                Message.HandleActionIfForbidAction();
                 return;
             }
 
             if (player.Set.Count != 2)
             {
-                _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
-                _evt.OnMessageEvent();
+                Message.HandleActionIfForbidAction();
                 return;
             }
 
@@ -78,15 +69,13 @@ namespace BlackJackConsoleGame.Classes
 
             if (dealer.Set.Count == 1 && dealer.Set[0].Face != Face.Ace)
             {
-                _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
-                _evt.OnMessageEvent();
+                Message.HandleActionIfForbidAction();
                 return;
             }
 
             if (player.CountOfChips < playersBet / 2)
             {
-                _evt.MessageEvent += GameNotification.HandleActionIfForbidAction;
-                _evt.OnMessageEvent();
+                Message.HandleActionIfForbidAction();
                 return;
             }
 
@@ -95,7 +84,7 @@ namespace BlackJackConsoleGame.Classes
 
         public bool HasOver(int playerSum)
         {
-            return playerSum > GameConstant.BlackJackPoints;
+            return playerSum > Game.BlackJackPoints;
         }
     }
 }
